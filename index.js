@@ -1,53 +1,71 @@
+import Artibot, {Global, Module} from "artibot";
+import Localizer from "artibot-localizer";
+import { Intents } from "discord.js";
+
+import path from "path";
+import { fileURLToPath } from "url";
+import { createRequire } from 'module';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const require = createRequire(import.meta.url);
+const { version } = require('./package.json');
+
 /**
  * Module to give a role to people in a vocal channel
  * @author GoudronViande24
+ * @license MIT
  */
+export default new Module({
+	id: "vcrole",
+	name: "VC Role",
+	version,
+	intents: [
+		Intents.FLAGS.GUILD_VOICE_STATES
+	],
+	langs: [
+		"fr",
+		"en"
+	],
+	repo: "GoudronViande24/artibot-vc-role",
+	parts: [
+		new Global({
+			id: "vcrole",
+			mainFunction
+		})
+	]
+})
 
-const Localizer = require("artibot-localizer");
-const path = require("path");
+/**
+ * Executed when bot is started
+ * @param {Artibot} artibot
+ */
+function mainFunction({ client, log, config }) {
+	const localizer = new Localizer({
+		lang: config.lang,
+		filePath: path.resolve(__dirname, "locales.json")
+	});
 
-module.exports = {
-	name: "vcRole",
+	// Config verification
+	if (!config.vcrole) config.vcrole = {};
+	if (!config.vcrole.role) config.vcrole.role = "Vocal";
 
-	manifest: {
-		manifestVersion: 1,
-		moduleVersion: "1.2.0",
-		name: "VC Role",
-		supportedLocales: [
-			"en",
-			"fr"
-		],
-		parts: [
-			{
-				id: "vcrole",
-				type: "global",
-				path: "index.js"
-			}
-		]
-	},
+	log("VC Role", localizer._("Ready."));
 
-	execute({ client, log, config }) {
-		const localizer = new Localizer({
-			lang: config.lang,
-			filePath: path.resolve(__dirname, "locales.json")
-		});
-		config = require("./config.json");
-		log("VC Role", localizer._("Ready."));
+	client.on("voiceStateUpdate", (oldState, newState) => {
+		const role = newState.guild.roles.cache.find(role => role.name.toLowerCase() == config.vcrole.role.toLowerCase());
 
-		client.on("voiceStateUpdate", (oldState, newState) => {
-			const role = newState.guild.roles.cache.find(role => role.name.toLowerCase() == config.role.toLowerCase());
+		if (!role && config.debug) {
+			log("VC Role", localizer.__("Cannot find [[0]] role in server [[1]]", { placeholders: [config.role, newState.guild.name] }), "debug");
+		}
 
-			if (!role && config.debug) {
-				log("VC Role", localizer.__("Cannot find [[0]] role in server [[1]]", { placeholders: [config.role, newState.guild.name] }), "debug");
-			};
+		if (!role) return;
 
-			if (!role) return;
-
-			if (newState.channelId) {
-				newState.member.roles.add(role);
-			} else {
-				newState.member.roles.remove(role);
-			};
-		});
-	}
-};
+		if (newState.channelId) {
+			newState.member.roles.add(role);
+		} else {
+			newState.member.roles.remove(role);
+		}
+	});
+}
