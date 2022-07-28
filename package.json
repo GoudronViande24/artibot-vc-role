@@ -1,6 +1,6 @@
 {
   "name": "artibot-vc-role",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "Give a special role to users in a vocal channel",
   "main": "index.js",
 	"type": "module",
