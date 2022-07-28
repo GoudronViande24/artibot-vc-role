@@ -1,6 +1,6 @@
-import Artibot, {Global, Module} from "artibot";
+import Artibot, { Global, Module } from "artibot";
 import Localizer from "artibot-localizer";
-import { Intents } from "discord.js";
+import { GatewayIntentBits } from "discord.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -22,7 +22,7 @@ export default new Module({
 	name: "VC Role",
 	version,
 	intents: [
-		Intents.FLAGS.GUILD_VOICE_STATES
+		GatewayIntentBits.GuildVoiceStates
 	],
 	langs: [
 		"fr",
