@@ -29,6 +29,7 @@ export default new Module({
 		"en"
 	],
 	repo: "GoudronViande24/artibot-vc-role",
+	packageName: "artibot-vc-role",
 	parts: [
 		new Global({
 			id: "vcrole",
