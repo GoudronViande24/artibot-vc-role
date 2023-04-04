@@ -12,6 +12,10 @@
 
 		"Cannot find [[0]] role in server [[1]]": {
 			"fr": "Impossible de trouver le rôle [[0]] dans le serveur [[1]]"
+		},
+
+		"This module is deprecated and will not be updated to future versions of Artibot, since Discord now has a native feature to do this.": {
+			"fr": "Ce module est obsolète et ne sera pas mis à jour pour les futures versions d'Artibot, puisque Discord a maintenant une fonctionnalité native pour faire cela."
 		}
 	}
 }

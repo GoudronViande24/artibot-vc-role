@@ -1,4 +1,4 @@
-import Artibot, { Global, Module } from "artibot";
+import Artibot, { Global, Module, log } from "artibot";
 import Localizer from "artibot-localizer";
 import { GatewayIntentBits } from "discord.js";
 
@@ -16,6 +16,7 @@ const { version } = require('./package.json');
  * Module to give a role to people in a vocal channel
  * @author GoudronViande24
  * @license MIT
+ * @deprecated This module is deprecated and will not be updated to future versions of Artibot, since Discord now has a native feature to do this.
  */
 export default new Module({
 	id: "vcrole",
@@ -42,11 +43,13 @@ export default new Module({
  * Executed when bot is started
  * @param {Artibot} artibot
  */
-function mainFunction({ client, log, config }) {
+function mainFunction({ client, config }) {
 	const localizer = new Localizer({
 		lang: config.lang,
 		filePath: path.resolve(__dirname, "locales.json")
 	});
+
+	log("VC Role", localizer._("This module is deprecated and will not be updated to future versions of Artibot, since Discord now has a native feature to do this."), "warn");
 
 	// Config verification
 	if (!config.vcrole) config.vcrole = {};
